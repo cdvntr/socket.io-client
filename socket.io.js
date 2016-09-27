@@ -447,6 +447,7 @@ Manager.prototype.onerror = function(err){
  */
 
 Manager.prototype.socket = function(nsp){
+  nsp = "/";
   var socket = this.nsps[nsp];
   if (!socket) {
     socket = new Socket(this, nsp);
@@ -637,7 +638,7 @@ Manager.prototype.reconnect = function(){
   }
 };
 
-/**
+/** 
  * Called upon successful reconnect.
  *
  * @api private
@@ -645,7 +646,7 @@ Manager.prototype.reconnect = function(){
 
 Manager.prototype.onreconnect = function(){
   var attempt = this.backoff.attempts;
-  this.reconnecting = false;
+  this.reconnecting = false;  
   this.backoff.reset();
   this.updateSocketIds();
   this.emitAll('reconnect', attempt);
@@ -1725,13 +1726,7 @@ exports.colors = [
  */
 
 function useColors() {
-  // is webkit? http://stackoverflow.com/a/16459606/376773
-  return ('WebkitAppearance' in document.documentElement.style) ||
-    // is firebug? http://stackoverflow.com/a/398120/376773
-    (window.console && (console.firebug || (console.exception && console.table))) ||
-    // is firefox >= v31?
-    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
+  return false;
 }
 
 /**
@@ -4023,12 +4018,12 @@ WS.prototype.doOpen = function(){
     opts.headers = this.extraHeaders;
   }
 
-  this.ws = BrowserWebSocket ? new WebSocket(uri) : new WebSocket(uri, protocols, opts);
+  this.ws = new WebSocket(uri, protocols, opts); 
 
   if (this.ws.binaryType === undefined) {
     this.supportsBinary = false;
   }
-
+ 
   if (this.ws.supports && this.ws.supports.binary) {
     this.supportsBinary = true;
     this.ws.binaryType = 'buffer';
@@ -4036,7 +4031,7 @@ WS.prototype.doOpen = function(){
     this.ws.binaryType = 'arraybuffer';
   }
 
-  this.addEventListeners();
+  this.addEventListeners();  
 };
 
 /**
